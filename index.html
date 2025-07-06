@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H2H GG League Basketball - Partidos en Vivo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-basketball-ball"></i>
+                    <h1>H2H GG League Basketball</h1>
+                    <span class="api-badge">API EN VIVO</span>
+                </div>
+                <div class="header-info">
+                    <div class="live-indicator">
+                        <div class="live-dot"></div>
+                        <span>En vivo</span>
+                    </div>
+                    <div class="update-info">
+                        Última actualización: <span id="lastUpdateTime">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar equipos, jugadores o streams...">
+                </div>
+                <button class="refresh-btn" onclick="refreshGames()">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar
+                </button>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list"></i>
+                    Todos
+                </button>
+                <button class="filter-btn" data-filter="live">
+                    <i class="fas fa-circle live-icon"></i>
+                    En vivo
+                </button>
+                <button class="filter-btn" data-filter="today">
+                    <i class="fas fa-calendar-day"></i>
+                    Hoy
+                </button>
+                <button class="filter-btn" data-filter="finished">
+                    <i class="fas fa-flag-checkered"></i>
+                    Finalizados
+                </button>
+                <button class="filter-btn betting-filter" data-filter="betting">
+                    <i class="fas fa-fire"></i>
+                    Apuestas Hot
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-basketball-ball"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number" id="totalGames">0</div>
+                    <div class="stat-label">Partidos</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number" id="liveGames">0</div>
+                    <div class="stat-label">En vivo</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number" id="bettingGames">0</div>
+                    <div class="stat-label">Apuestas Hot</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number">15s</div>
+                    <div class="stat-label">Actualización</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p>Cargando partidos...</p>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Error al cargar los datos. Reintentando...</span>
+            </div>
+
+            <!-- Games Container -->
+            <div class="games-container" id="gamesContainer">
+                <!-- Los partidos se cargarán aquí dinámicamente -->
+            </div>
+
+            <!-- No Games -->
+            <div class="no-games" id="noGames" style="display: none;">
+                <i class="fas fa-basketball-ball"></i>
+                <h3>No hay partidos disponibles</h3>
+                <p>No se encontraron partidos que coincidan con tu búsqueda o filtros.</p>
+                <button class="refresh-btn" onclick="refreshGames()">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar
+                </button>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <p><strong>H2H GG League Basketball</strong></p>
+                    <p>Datos en tiempo real de partidos de ebasketball</p>
+                </div>
+                <div class="footer-links">
+                    <a href="https://h2hgg.com/en/ebasketball" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        Sitio oficial
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="gameModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Detalles del Partido</h2>
+                    <button class="close-btn" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-teams" id="modalTeams">
+                    <!-- Los equipos se cargarán aquí -->
+                </div>
+                <div class="modal-game-details" id="modalGameDetails">
+                    <!-- Los detalles se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scraper.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

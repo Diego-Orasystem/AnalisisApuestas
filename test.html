@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test H2H GG League Scraper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .game-item {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .live { background-color: #ff4444; }
+        .finished { background-color: #4CAF50; }
+        .scheduled { background-color: #2196F3; }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            color: #ff4444;
+            background: #ffe6e6;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #4CAF50;
+            background: #e6ffe6;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .log {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏀 Test H2H GG League Scraper</h1>
+        
+        <div class="controls">
+            <button onclick="testScraper()">🔍 Probar Scraper</button>
+            <button onclick="testAPI()">🌐 Probar API</button>
+            <button onclick="generateData()">🎲 Generar Datos</button>
+            <button onclick="clearLog()">🗑️ Limpiar Log</button>
+        </div>
+        
+        <div id="status" class="loading">
+            Presiona un botón para comenzar las pruebas...
+        </div>
+        
+        <div id="log" class="log"></div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script src="scraper.js"></script>
+    <script>
+        let scraper = null;
+        let logMessages = [];
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}`;
+            logMessages.push(logMessage);
+            updateLog();
+            console.log(logMessage);
+        }
+
+        function updateLog() {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML = logMessages.slice(-20).join('\n');
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            logMessages = [];
+            updateLog();
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function updateStatus(message, type = 'loading') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = type;
+            statusDiv.innerHTML = message;
+        }
+
+        function displayGames(games) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (games.length === 0) {
+                resultsDiv.innerHTML = '<p>No se encontraron partidos.</p>';
+                return;
+            }
+
+            let html = `<h2>Partidos Encontrados (${games.length})</h2>`;
+            
+            games.forEach(game => {
+                html += `
+                    <div class="game-item">
+                        <div class="status ${game.status}">${getStatusText(game.status)}</div>
+                        <div>
+                            <strong>${game.homeTeam.name}</strong> ${game.homeScore} - ${game.awayScore} <strong>${game.awayTeam.name}</strong>
+                        </div>
+                        <div>
+                            <small>
+                                Liga: ${game.league} | 
+                                Tiempo: ${game.time} | 
+                                Fuente: ${game.source}
+                            </small>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'live': return 'En Vivo';
+                case 'finished': return 'Finalizado';
+                case 'scheduled': return 'Programado';
+                default: return 'Desconocido';
+            }
+        }
+
+        async function testScraper() {
+            updateStatus('🔍 Probando scraper completo...', 'loading');
+            log('Iniciando prueba completa del scraper');
+            
+            try {
+                if (!scraper) {
+                    scraper = new H2HGGScraper();
+                    log('Scraper inicializado');
+                }
+                
+                const games = await scraper.getGames();
+                log(`Scraper completado: ${games.length} partidos obtenidos`);
+                
+                displayGames(games);
+                updateStatus(`✅ Scraper completado: ${games.length} partidos encontrados`, 'success');
+                
+            } catch (error) {
+                log(`Error en scraper: ${error.message}`);
+                updateStatus(`❌ Error en scraper: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAPI() {
+            updateStatus('🌐 Probando endpoints de API...', 'loading');
+            log('Iniciando prueba de endpoints de API');
+            
+            try {
+                if (!scraper) {
+                    scraper = new H2HGGScraper();
+                }
+                
+                const games = await scraper.tryAPIEndpoints();
+                log(`API test completado: ${games.length} partidos obtenidos`);
+                
+                displayGames(games);
+                updateStatus(`✅ API test completado: ${games.length} partidos encontrados`, 'success');
+                
+            } catch (error) {
+                log(`Error en API test: ${error.message}`);
+                updateStatus(`❌ Error en API test: ${error.message}`, 'error');
+            }
+        }
+
+        async function generateData() {
+            updateStatus('🎲 Generando datos realistas...', 'loading');
+            log('Generando datos realistas');
+            
+            try {
+                if (!scraper) {
+                    scraper = new H2HGGScraper();
+                }
+                
+                const games = scraper.generateRealisticData();
+                log(`Datos generados: ${games.length} partidos creados`);
+                
+                displayGames(games);
+                updateStatus(`✅ Datos generados: ${games.length} partidos creados`, 'success');
+                
+            } catch (error) {
+                log(`Error generando datos: ${error.message}`);
+                updateStatus(`❌ Error generando datos: ${error.message}`, 'error');
+            }
+        }
+
+        // Inicializar cuando la página cargue
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Página de pruebas cargada');
+            updateStatus('✅ Página de pruebas lista', 'success');
+        });
+    </script>
+</body>
+</html> 

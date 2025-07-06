@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Live - Partidos NBA en Tiempo Real</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-basketball-ball"></i>
+                    <h1>Basketball Live</h1>
+                    <span class="api-badge">NBA API</span>
+                </div>
+                <div class="header-info">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        <span>Datos en Tiempo Real</span>
+                    </div>
+                    <div class="last-update">
+                        <i class="fas fa-clock"></i>
+                        <span>Última actualización: <span id="lastUpdateTime">--:--</span></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="controls">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar equipos...">
+                </div>
+                
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-list"></i>
+                        Todos
+                    </button>
+                    <button class="filter-btn" data-filter="live">
+                        <i class="fas fa-play-circle"></i>
+                        En Vivo
+                    </button>
+                    <button class="filter-btn" data-filter="today">
+                        <i class="fas fa-calendar-day"></i>
+                        Hoy
+                    </button>
+                    <button class="filter-btn" data-filter="finished">
+                        <i class="fas fa-check-circle"></i>
+                        Finalizados
+                    </button>
+                </div>
+                
+                <button class="refresh-btn" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar
+                </button>
+            </div>
+
+            <div class="games-section">
+                <div class="section-header">
+                    <h2>Partidos NBA</h2>
+                    <div class="games-counter">
+                        <span id="gamesCount">0</span> partidos
+                    </div>
+                </div>
+
+                <div class="games-container">
+                    <div class="loading" id="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Cargando partidos...</p>
+                    </div>
+
+                    <div class="games-list" id="gamesList">
+                        <!-- Los partidos se cargarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Datos Proporcionados por</h3>
+                    <p><strong>BallDontLie API</strong> - API gratuita de NBA</p>
+                    <p><small>Los datos se actualizan cada 30 segundos</small></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Información</h3>
+                    <p>• Partidos en tiempo real</p>
+                    <p>• Estadísticas actualizadas</p>
+                    <p>• Temporada regular y playoffs</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Funcionalidades</h3>
+                    <p>• Búsqueda por equipos</p>
+                    <p>• Filtros inteligentes</p>
+                    <p>• Actualización automática</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Basketball Live - Datos en tiempo real de NBA</p>
+                <p><small>Desarrollado para mostrar partidos de basketball profesional</small></p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal para detalles del partido -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header-controls">
+                <h2>Detalles del Partido</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div id="modalGameDetails">
+                <!-- Los detalles se cargarán aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

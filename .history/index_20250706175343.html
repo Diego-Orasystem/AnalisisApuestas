@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Live - Partidos en Tiempo Real</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-basketball-ball"></i>
+                    <h1>Basketball Live</h1>
+                </div>
+                <div class="header-info">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        <span>EN VIVO</span>
+                    </div>
+                    <div class="last-update">
+                        <i class="fas fa-sync-alt"></i>
+                        <span id="lastUpdate">Actualizando...</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="controls">
+                <div class="filter-section">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-list"></i>
+                        Todos los Partidos
+                    </button>
+                    <button class="filter-btn" data-filter="live">
+                        <i class="fas fa-play-circle"></i>
+                        En Vivo
+                    </button>
+                    <button class="filter-btn" data-filter="today">
+                        <i class="fas fa-calendar-day"></i>
+                        Hoy
+                    </button>
+                    <button class="filter-btn" data-filter="finished">
+                        <i class="fas fa-check-circle"></i>
+                        Finalizados
+                    </button>
+                </div>
+                
+                <div class="search-section">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar equipos...">
+                    </div>
+                    <button class="refresh-btn" id="refreshBtn">
+                        <i class="fas fa-sync-alt"></i>
+                        Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner">
+                    <i class="fas fa-basketball-ball fa-spin"></i>
+                </div>
+                <p>Cargando partidos...</p>
+            </div>
+
+            <div class="games-container" id="gamesContainer">
+                <!-- Los partidos se cargarán aquí dinámicamente -->
+            </div>
+
+            <div class="no-games" id="noGames" style="display: none;">
+                <div class="no-games-content">
+                    <i class="fas fa-basketball-ball"></i>
+                    <h3>No hay partidos disponibles</h3>
+                    <p>No se encontraron partidos para los filtros seleccionados.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Basketball Live - Datos en tiempo real</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">API Status</a>
+                <a href="#" class="footer-link">Soporte</a>
+                <a href="#" class="footer-link">Acerca de</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal para detalles del partido -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Detalles del Partido</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Contenido del modal se carga dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
