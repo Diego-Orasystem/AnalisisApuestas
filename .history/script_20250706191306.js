@@ -236,15 +236,11 @@ function createGameCard(game) {
                 <div class="betting-info">
                     <div class="betting-detail">
                         <i class="fas fa-fire"></i>
-                        <span>${bettingInfo.intensityText}</span>
-                    </div>
-                    <div class="betting-detail">
-                        <i class="fas fa-chart-line"></i>
-                        <span>+${bettingInfo.scoreDiff} PUNTOS</span>
+                        <span>VENTAJA: ${bettingInfo.scoreDiff} PUNTOS</span>
                     </div>
                     <div class="betting-detail">
                         <i class="fas fa-basketball-ball"></i>
-                        <span>${bettingInfo.leadingTeam} LIDERA</span>
+                        <span>${bettingInfo.leadingTeam} DOMINA</span>
                     </div>
                     <div class="betting-detail">
                         <i class="fas fa-clock"></i>
@@ -476,14 +472,14 @@ function setupAutoUpdate() {
         
         if (currentBettingCount > previousBettingCount && previousBettingCount > 0) {
             const newBettingGames = currentBettingCount - previousBettingCount;
-            console.log(`🔥 ${newBettingGames} nuevos partidos hot detectados (${API_CONFIG.BETTING_CONFIG.MIN_SCORE_DIFF}+ puntos)`);
+            console.log(`🔥 ${newBettingGames} nuevos partidos hot para apuestas detectados`);
             showBettingNotification(newBettingGames);
         }
         
         previousBettingCount = currentBettingCount;
         
         if (currentBettingGames.length > 0) {
-            console.log(`🔥 Total: ${currentBettingGames.length} partidos hot activos (cualquier período, ${API_CONFIG.BETTING_CONFIG.MIN_SCORE_DIFF}+ puntos)`);
+            console.log(`🔥 Total: ${currentBettingGames.length} partidos hot para apuestas activos`);
         }
     }, API_CONFIG.UPDATE_INTERVAL);
 }
@@ -536,7 +532,7 @@ function showBettingNotification(count) {
     notification.innerHTML = `
         <div class="notification-content">
             <i class="fas fa-fire"></i>
-            <span>¡${count} nuevo${count > 1 ? 's' : ''} partido${count > 1 ? 's' : ''} HOT detectado${count > 1 ? 's' : ''}!</span>
+            <span>¡${count} nuevo${count > 1 ? 's' : ''} partido${count > 1 ? 's' : ''} HOT para apuestas!</span>
         </div>
     `;
     

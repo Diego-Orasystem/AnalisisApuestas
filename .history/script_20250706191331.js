@@ -536,7 +536,7 @@ function showBettingNotification(count) {
     notification.innerHTML = `
         <div class="notification-content">
             <i class="fas fa-fire"></i>
-            <span>¡${count} nuevo${count > 1 ? 's' : ''} partido${count > 1 ? 's' : ''} HOT detectado${count > 1 ? 's' : ''}!</span>
+            <span>¡${count} nuevo${count > 1 ? 's' : ''} partido${count > 1 ? 's' : ''} HOT para apuestas!</span>
         </div>
     `;
     

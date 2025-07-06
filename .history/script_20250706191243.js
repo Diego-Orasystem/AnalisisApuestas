@@ -12,7 +12,8 @@ const API_CONFIG = {
     
     // Configuración de apuestas
     BETTING_CONFIG: {
-        MIN_SCORE_DIFF: 8, // Mínimo 8 puntos de diferencia (cualquier período)
+        MIN_PERIOD: 2, // Mínimo 2do cuarto
+        MIN_SCORE_DIFF: 8, // Mínimo 8 puntos de diferencia
         HIGHLIGHT_DURATION: 3000 // Duración del resaltado cuando cambia
     }
 };
@@ -236,15 +237,11 @@ function createGameCard(game) {
                 <div class="betting-info">
                     <div class="betting-detail">
                         <i class="fas fa-fire"></i>
-                        <span>${bettingInfo.intensityText}</span>
-                    </div>
-                    <div class="betting-detail">
-                        <i class="fas fa-chart-line"></i>
-                        <span>+${bettingInfo.scoreDiff} PUNTOS</span>
+                        <span>VENTAJA: ${bettingInfo.scoreDiff} PUNTOS</span>
                     </div>
                     <div class="betting-detail">
                         <i class="fas fa-basketball-ball"></i>
-                        <span>${bettingInfo.leadingTeam} LIDERA</span>
+                        <span>${bettingInfo.leadingTeam} DOMINA</span>
                     </div>
                     <div class="betting-detail">
                         <i class="fas fa-clock"></i>
@@ -342,22 +339,6 @@ function getBettingInfo(game) {
     const leadingScore = Math.max(scoreA, scoreB);
     const trailingScore = Math.min(scoreA, scoreB);
     
-    // Determinar el estado del partido para mostrar información relevante
-    let periodText = 'Inicio';
-    if (currentPeriod >= 1 && currentPeriod <= 4) {
-        periodText = `${currentPeriod}° Período`;
-    } else if (currentPeriod > 4) {
-        periodText = 'Tiempo Extra';
-    }
-    
-    // Calcular intensidad de la apuesta basada en la diferencia
-    let intensityText = 'VENTAJA MODERADA';
-    if (scoreDiff >= 15) {
-        intensityText = 'VENTAJA DOMINANTE';
-    } else if (scoreDiff >= 12) {
-        intensityText = 'VENTAJA FUERTE';
-    }
-    
     return {
         isBetting: isBettingGame(game),
         period: currentPeriod,
@@ -365,8 +346,7 @@ function getBettingInfo(game) {
         leadingTeam: leadingTeam,
         leadingScore: leadingScore,
         trailingScore: trailingScore,
-        periodText: periodText,
-        intensityText: intensityText
+        periodText: currentPeriod <= 4 ? `${currentPeriod}° Período` : 'Tiempo Extra'
     };
 }
 
@@ -476,14 +456,14 @@ function setupAutoUpdate() {
         
         if (currentBettingCount > previousBettingCount && previousBettingCount > 0) {
             const newBettingGames = currentBettingCount - previousBettingCount;
-            console.log(`🔥 ${newBettingGames} nuevos partidos hot detectados (${API_CONFIG.BETTING_CONFIG.MIN_SCORE_DIFF}+ puntos)`);
+            console.log(`🔥 ${newBettingGames} nuevos partidos hot para apuestas detectados`);
             showBettingNotification(newBettingGames);
         }
         
         previousBettingCount = currentBettingCount;
         
         if (currentBettingGames.length > 0) {
-            console.log(`🔥 Total: ${currentBettingGames.length} partidos hot activos (cualquier período, ${API_CONFIG.BETTING_CONFIG.MIN_SCORE_DIFF}+ puntos)`);
+            console.log(`🔥 Total: ${currentBettingGames.length} partidos hot para apuestas activos`);
         }
     }, API_CONFIG.UPDATE_INTERVAL);
 }
@@ -536,7 +516,7 @@ function showBettingNotification(count) {
     notification.innerHTML = `
         <div class="notification-content">
             <i class="fas fa-fire"></i>
-            <span>¡${count} nuevo${count > 1 ? 's' : ''} partido${count > 1 ? 's' : ''} HOT detectado${count > 1 ? 's' : ''}!</span>
+            <span>¡${count} nuevo${count > 1 ? 's' : ''} partido${count > 1 ? 's' : ''} HOT para apuestas!</span>
         </div>
     `;
     
